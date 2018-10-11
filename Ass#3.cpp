@@ -9,47 +9,49 @@ GNU GCC Compiler
 #include <fstream>
 #include <cstdlib>
 #include <iomanip>
+#include <string>
 
 using namespace std;
 
 const int COLUMN = 7;
 
-void initialize1(const int, const int, ifstream&, ofstream&);
+void initialize1(ifstream&, ofstream&);
 float getfunction(float, ifstream&, char);
 void initialize2(int[][COLUMN], ifstream&, const int);
-void output(ofstream&);
+void csvoutput(ofstream&, int[][COLUMN], const int);
 
 int main()
 {
 
     const int ROW = 500;
     ifstream csv, csvassign;
-    ofstream csvmodified, csvoutput;
+    ofstream csvmodified, csvout;
     string dummy;
     int mutualfund[ROW][COLUMN];
 
-    csv.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\Ass#3\\VTSMX.csv");
-    csvmodified.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\Ass#3\\VTSMXmodified.csv");
-    csvassign.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\Ass#3\\VTSMXmodified.csv");
-    csvoutput.open("");
+    csv.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\VTSMX.csv");
+    csvmodified.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\VTSMXmodified.csv");
+    csvassign.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\VTSMXmodified.csv");
+    csvout.open("C:\\Users\\Student\\Documents\\22B\\Ass#3\\output.txt");
 
-    if(!csv && !csvmodified && !csvassign)
+    if(!csv && !csvmodified && !csvassign && !csvout)
     {
         cout << "Can't Open File.";
         exit(0);
     }
     getline(csv,dummy);
-    initialize1(ROW, COLUMN, csv, csvmodified);
+    initialize1(csv, csvmodified);
     initialize2(mutualfund, csvassign, ROW);
-
+    csvoutput(csvout, mutualfund, ROW);
     csv.close();
     csvmodified.close();
     csvassign.close();
+    csv.close();
 
     return 0;
 }
 
-void initialize1(const int R, const int C, ifstream& csv, ofstream& csvmodified)
+void initialize1(ifstream& csv, ofstream& csvmodified)
 {
     char punct;
     int year, month, day, sixth;
@@ -79,49 +81,47 @@ void initialize1(const int R, const int C, ifstream& csv, ofstream& csvmodified)
     while(!csv.eof());
 }
 
+float getfunction(float v, ifstream& csv, char d)
+{
+    char p[12];
+    csv.get(p, sizeof(p), d);
+    csv.get();
+    v = atof(p);
+    return v;
+}
+
 void initialize2(int mf[][COLUMN], ifstream& csvassign, const int R)
 {
-    int value1;
+    int value1, storeitforlater;
     float value2, storage;
-    do
+    while(!csvassign.eof())
     {
         for(int i = 0; i < R; i++)
         {
-            if(csvassign.eof())
-            {
-                break;
-            }
             csvassign >> value1;
-            mf[i][0] = value1;
             if(csvassign.eof())
             {
                 break;
             }
-            cout << mf[i][0] << left << setw(10);
+            mf[i][0] = value1;
             for(int j = 1; j < COLUMN; j++)
             {
                 csvassign >> value2;
                 storage = value2 * 100.00;
                 cout << setprecision(4);
                 mf[i][j] = storage;
-                cout << mf[i][j] << left << setw(10);
-                if(csvassign.eof())
-                {
-                    break;
-                }
             }
-            cout << endl;
         }
     }
-    while(!csvassign.eof());
 }
 
-float getfunction(float v, ifstream& csv, char d)
+void csvoutput(ofstream& o, int mf[][COLUMN], const int R)
 {
-    char p[12];
-    char ch;
-    csv.get(p, sizeof(p), d);
-    ch = csv.get();
-    v = atof(p);
-    return v;
+    o << "Current Date: " << endl;
+    o << "Current Close: $" << mf[R-1][1]/100.00 << endl << endl;
+    o << "The latest five closes are:" << endl;
+    for(int i = R-1; i > R-6; i--)
+    {
+        o << (mf[i][1]/100.00) << endl;
+    }
 }
