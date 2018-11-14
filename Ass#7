@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+class Population
+{
+private:
+    int why;
+public:
+    Population(const int ops);
+    int getit()
+    {
+        return why;
+    }
+};
+
+int main()
+{
+    const int OriginalPopulationSize = 46;
+
+    srand(time(0));
+    Population World(OriginalPopulationSize);
+    cout << World.getit();
+//    World.print();
+//
+//    // let time pass until half of the world's Population dies
+//    do
+//    {
+//        TODAY.letTimePass();
+//        World.examinePopulation();
+//    }
+//    while (World.getNumberLiving() > OriginalPopulationSize/2);
+//
+//    World.print();
+    return 0;
+}
+
+Population::Population(int ops = 0)
+{
+    why = ops;
+}
