@@ -1,43 +1,69 @@
+/**
+William Lee
+Ass#7
+Code::Blocks (Windows 10 Pro)
+GNU GCC Compiler
+*/
+
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <ctime>
 
 using namespace std;
 
-class Population
+unsigned DaysPerMonth[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+const string NAMES[] =
+{
+    "Luis","Arbouz","Nathan","Christine","Jorge","Chase","Jamie","Ryan",
+    "James","Kyle","Sunan","Houman","Sofia","Joy","Chen","Donovan",
+    "Jason","William","Yuqin","Alex","Mohammed","Yusuf","Dalver",
+    "Dustin","Thomas","Lawrence","Zuiyun","Udyog","Umar","Gursewak","Robabeh",
+    "Shanli","Norman","Colin","Manmeet Singh","Rajesh","Janice","Atiq",
+    "Ayumi","Richard","Rose Marie","Tina Marie","Miles","Mengqing","Shu Hui","Yujing"
+};
+
+class Date
 {
 private:
-    int why;
+    unsigned int month;
+    unsigned int day;
+    unsigned int year;
 public:
-    Population(const int ops);
-    int getit()
+    Date();
+    Date(unsigned int m, unsigned int d, unsigned int y)
     {
-        return why;
+
     }
+    void increment();
+    void print() const;
+    void letTimePass();
 };
 
 int main()
 {
-    const int OriginalPopulationSize = 46;
-
-    srand(time(0));
-    Population World(OriginalPopulationSize);
-    cout << World.getit();
-//    World.print();
-//
-//    // let time pass until half of the world's Population dies
-//    do
-//    {
-//        TODAY.letTimePass();
-//        World.examinePopulation();
-//    }
-//    while (World.getNumberLiving() > OriginalPopulationSize/2);
-//
-//    World.print();
+    Date TODAY;
+    TODAY.print();
     return 0;
 }
 
-Population::Population(int ops = 0)
+Date::Date()
 {
-    why = ops;
+    time_t now = time(0);
+    tm* ptr2now;
+    ptr2now = localtime(&now);
+    month = ptr2now -> tm_mon+1;
+    day = ptr2now -> tm_mday;
+    year = ptr2now -> tm_year+1900;
+}
+
+void Date::print() const
+{
+    int i = 0;
+    while(i < 10)
+    {
+        std::cout << std::setfill('0');
+        std::cout << std::setw(2) << month << '/' << std::setw(2)
+                  << day << '/' << std::setw(2) << year << std::endl;
+    }
 }
